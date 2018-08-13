@@ -1,0 +1,105 @@
+#
+# A couple of useful guides & docs:
+#
+# - Main Bitrise CLI docs: https://github.com/bitrise-io/bitrise/tree/master/_docs
+# - Step Development Guideline: https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
+# - Bitrise.yml format spec: https://github.com/bitrise-io/bitrise/blob/master/_docs/bitrise-yml-format-spec.md
+# - Bitrise docs: http://devcenter.bitrise.io/
+# - Bitrise CLI guides: http://devcenter.bitrise.io/bitrise-cli/
+
+title: |-
+  Jira Comments
+summary: |
+  Creates comments for all tasks from pull request merge commits. It uses the commit message to determine which tasks should be commented.
+description: |
+  This steps scans last merge commits or last commit if it is not a merge commit, and gathers all Jira tasks names found in commit messages.
+  Once the tasks are found it uses the credentials provided to use Jira API and posts a comment for each found task.
+  
+  The regex pattern to look for Jira tasks is "<project_prefix>[0-9]{1,5}"
+  
+  This step is using Jira API v2.
+website: https://github.com/DroidsOnRoids/bitrise_step_build_info_jira_comment
+source_code_url: https://github.com/DroidsOnRoids/bitrise_step_build_info_jira_comment
+support_url: https://github.com/DroidsOnRoids/bitrise_step_build_info_jira_comment/issues
+host_os_tags:
+  - osx-10.10
+  - ubuntu-16.04
+
+# If this step should be available only for certain project types
+# just uncomment this `project_type_tags` section and include all the
+# project types supported by the step. If the step can be used for all
+# project types then you can just remove this section.
+# If no `project_type_tags` specified (or specified as an empty array)
+# that means the step can be used for any project type.
+# You can find more information about project type tags in the Step Development Guideline:
+# https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
+#
+# project_type_tags:
+#   - ios
+#   - macos
+#   - android
+#   - xamarin
+#   - react-native
+#   - cordova
+#   - ionic
+
+# Type tags are used for categorizing steps, for easier step discovery in Step Libraries.
+# You can find more information about type tags in the Step Development Guideline:
+# https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
+type_tags:
+  - utility
+
+is_requires_admin_user: false
+is_always_run: false
+is_skippable: false
+run_if: ""
+
+deps:
+  brew:
+  - name: git
+  apt_get:
+  - name: git
+
+toolkit:
+  bash:
+    entry_file: step.sh
+
+
+inputs:
+  - project_prefix:
+    opts:
+      title: "Jira project prefix"
+      description: |
+        Project prefix to search for tasks.
+        
+        e.g. "PROJ-"
+      is_expand: true
+      is_required: true
+      value_options: []
+  - backlog_default_url:
+    opts:
+      title: "Jira domain"
+      description: |
+        Jira company domain.
+      
+        e.g. "example.atlassian.net"
+      is_expand: true
+      is_required: true
+  - jira_user:
+    opts:
+      title: "Jira user"
+      description: |
+        Jira user used to authenticate with Jira API
+        
+        e.g. "someone@example.pl"
+  - jira_token:
+    opts:
+      title: "Jira user token"
+      description: |
+        Jira user token used to authenticate with Jira API
+        
+        24 character string
+  - jira_comment:
+    opts:
+      title: "Comment"
+      description: "Comment that will be posted for each found Jira task"
