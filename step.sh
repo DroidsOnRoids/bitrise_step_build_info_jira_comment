@@ -2,12 +2,12 @@
 
 set -e
 
-red=`tput setaf 1`
-green=`tput setaf 2`
-blue=`tput setaf 4`
-magenta=`tput setaf 5`
-cyan=`tput setaf 6`
-reset=`tput sgr0`
+red=$'\e[31m'
+green=$'\e[32m'
+blue=$'\e[34m'
+magenta=$'\e[35m'
+cyan=$'\e[36m'
+reset=$'\e[0m'
 
 MERGES=$(git log $(git merge-base --octopus $(git log -1 --merges --pretty=format:%P))..$(git log -1 --merges --pretty=format:%H) --pretty=format:%s)
 
