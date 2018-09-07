@@ -64,12 +64,21 @@ fi
 echo "${blue}✉️  Comment:${cyan}"
 echo $'\t'"$jira_comment"
 
+create_comment_data()
+{
+cat<<EOF
+{
+"body": "$jira_comment"
+}
+EOF
+}
+
 echo "${blue}⚡ Posting to:"
 for (( i=0 ; i<${#TASKS[*]} ; ++i ))
 do
 	echo $'\t'"${magenta}⚙️  "${TASKS[$i]}
 	
-	res="$(curl --write-out %{response_code} --silent --output /dev/null --user $jira_user:$jira_token --request POST --header "Content-Type: application/json" --data "{\"body\": \"${jira_comment}\"}" --url https://${backlog_default_url}/rest/api/2/issue/${TASKS[$i]}/comment)"
+	res="$(curl --write-out %{response_code} --silent --output /dev/null --user $jira_user:$jira_token --request POST --header "Content-Type: application/json" --data "$(create_comment_data)" --url https://${backlog_default_url}/rest/api/2/issue/${TASKS[$i]}/comment)"
 	
 	if test "$res" == "201"
 	then
