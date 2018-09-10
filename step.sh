@@ -62,33 +62,33 @@ then
 fi
 
 echo "${blue}✉️  Comment:${cyan}"
-echo $'\t'"$jira_comment"
+
+escaped_jira_comment=$(echo "$jira_comment" | perl -pe 's/\n/\\n/g' | sed 's/.\{2\}$//')
 
 create_comment_data()
 {
 cat<<EOF
 {
-"body": "$jira_comment"
+"body": "${escaped_jira_comment}"
 }
 EOF
 }
 
 comment_data="$(create_comment_data)"
 
-escaped_comment_data=$(echo ${comment_data} | sed -e "s#/#\\\/#g")
-
 echo "${blue}⚡ Posting to:"
 for (( i=0 ; i<${#TASKS[*]} ; ++i ))
 do
-	echo $'\t'"${magenta}⚙️  "${TASKS[$i]}
-	
-res="$(curl --write-out %{response_code} --silent --output /dev/null --user $jira_user:$jira_token --request POST --header "Content-Type: application/json" --data-binary "${escaped_comment_data}" --url https://${backlog_default_url}/rest/api/2/issue/${TASKS[$i]}/comment)"
-	
-	if test "$res" == "201"
-	then
-		echo $'\t'$'\t'"${green}✅ Success!${reset}"
-	else
-		echo $'\t'$'\t'"${red}❗️ Failed${reset}"
-	fi
+echo $'\t'"${magenta}⚙️  "${TASKS[$i]}
+
+res="$(curl --write-out %{response_code} --silent --output /dev/null --user $jira_user:$jira_token --request POST --header "Content-Type: application/json" --data-binary "${comment_data}" --url https://${backlog_default_url}/rest/api/2/issue/${TASKS[$i]}/comment)"
+
+if test "$res" == "201"
+then
+echo $'\t'$'\t'"${green}✅ Success!${reset}"
+else
+echo $'\t'$'\t'"${red}❗️ Failed${reset}"
+echo $res
+fi
 done
-echo "${reset}"
+echo "${reset}" 
