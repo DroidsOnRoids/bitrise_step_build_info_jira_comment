@@ -92,6 +92,7 @@ inputs:
         Jira user used to authenticate with Jira API
         
         e.g. "someone@example.pl"
+      is_sensitive: true
   - jira_token:
     opts:
       title: "Jira user token"
@@ -99,6 +100,7 @@ inputs:
         Jira user token used to authenticate with Jira API
         
         24 character string
+      is_sensitive: true  
   - jira_comment:
     opts:
       title: "Comment"
