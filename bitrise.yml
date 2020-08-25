@@ -4,7 +4,6 @@ default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 app:
   envs:
   - BITRISE_STEP_ID: jira-comments
-  - BITRISE_STEP_VERSION: "0.0.4"
   - BITRISE_STEP_GIT_CLONE_URL: https://github.com/DroidsOnRoids/bitrise_step_build_info_jira_comment.git
   - MY_STEPLIB_REPO_FORK_GIT_URL: git@github.com:DroidsOnRoids/bitrise-steplib.git
 
@@ -61,7 +60,6 @@ workflows:
       # if you want to share this step into a StepLib
       - MY_STEPLIB_REPO_FORK_GIT_URL: $MY_STEPLIB_REPO_FORK_GIT_URL
       - BITRISE_STEP_ID: $BITRISE_STEP_ID
-      - BITRISE_STEP_VERSION: $BITRISE_STEP_VERSION
       - BITRISE_STEP_GIT_CLONE_URL: $BITRISE_STEP_GIT_CLONE_URL
     description: |-
       If this is the first time you try to share a Step you should
@@ -93,5 +91,5 @@ workflows:
             #!/bin/bash
             set -ex
             bitrise share start -c "${MY_STEPLIB_REPO_FORK_GIT_URL}"
-            bitrise share create --stepid "${BITRISE_STEP_ID}" --tag "${BITRISE_STEP_VERSION}" --git "${BITRISE_STEP_GIT_CLONE_URL}"
+            bitrise share create --stepid "${BITRISE_STEP_ID}" --tag "$(git describe --tags --exact-match)" --git "${BITRISE_STEP_GIT_CLONE_URL}"
             bitrise share finish
