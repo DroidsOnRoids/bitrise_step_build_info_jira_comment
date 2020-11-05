@@ -18,7 +18,7 @@ MERGES=($MERGES)
 
 IFS=$SAVEDIFS
 
-LAST_COMMIT=$(git log -1 --pretty=format:%s)
+LAST_COMMIT=$(git log -1 --pretty=format:%b)
 
 TASKS=()
 
@@ -47,7 +47,9 @@ then
 
 		for task in $(echo $MERGES | grep "$project_prefix[0-9]{1,5}" -E -o || true | sort -u -r --version-sort)
 		do
-			TASKS+=($task)
+            if [[ ! " ${TASKS[@]} " =~ " ${task} " ]]; then
+                TASKS+=($task)
+            fi
 		done
 	else
 		echo "${magenta}☑️  Not a merge commit. Searching for tasks in current commit message...${cyan}"
@@ -56,7 +58,9 @@ then
 		
 		for task in $(echo $LAST_COMMIT | grep "$project_prefix[0-9]{1,5}" -E -o || true | sort -u -r --version-sort)
 		do
-			TASKS+=($task)
+            if [[ ! " ${TASKS[@]} " =~ " ${task} " ]]; then
+                TASKS+=($task)
+            fi
 		done
 	fi
 fi
