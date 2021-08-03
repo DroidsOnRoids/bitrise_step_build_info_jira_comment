@@ -18,7 +18,7 @@ MERGES=($MERGES)
 
 IFS=$SAVEDIFS
 
-LAST_COMMIT=$(git log -1 --pretty=format:%b)
+LAST_COMMIT=$(git log -1 --pretty=format:%B)
 
 TASKS=()
 
