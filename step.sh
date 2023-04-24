@@ -9,7 +9,7 @@ magenta=$'\e[35m'
 cyan=$'\e[36m'
 reset=$'\e[0m'
 
-MERGES=$(git log $(git merge-base --octopus $(git log -1 --merges --pretty=format:%P))..$(git log -1 --merges --pretty=format:%H) --pretty=format:%s)
+MERGES=$(git log --pretty=format:%s $(git merge-base --octopus $(git log -1 --merges --pretty=format:%P))..$(git log -1 --merges --pretty=format:%H))
 
 SAVEDIFS=$IFS
 IFS=$'\n'
